@@ -76,7 +76,6 @@ class StoryList {
    */
 
   async addStory(  user, newStory ) {
-    //TODO:
     //validation
     if(!newStory.title || !newStory.author || !newStory.url){
       throw new Error("Invalid story passed to addStory");
@@ -84,8 +83,17 @@ class StoryList {
     if(!(user instanceof User)){
       throw new Error("Invalid user object passed to addStory")
     }
-      const res = axios.post(`${BASE_URL}/stories`)
 
+    const res = await axios.post(`${BASE_URL}/stories`, 
+    {
+      token: user.loginToken,
+      story: {
+        author: newStory.author,
+        title: newStory.title,
+        url: newStory.url
+      }
+    })
+    return res.status
   }
 }
 
