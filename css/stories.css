@@ -37,3 +37,6 @@
 .story-user {
   display: block;
 }
+form label{
+  text-align: left;
+}

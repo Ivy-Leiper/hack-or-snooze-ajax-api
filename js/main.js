@@ -31,7 +31,6 @@ function hidePageComponents() {
 /** Overall function to kick off the app. */
 
 async function start() {
-  console.debug("start");
 
   // "Remember logged-in user" and log in, if credentials in localStorage
   await checkForRememberedUser();
@@ -42,9 +41,8 @@ async function start() {
 }
 
 // Once the DOM is entirely loaded, begin the app
-
-console.warn("HEY STUDENT: This program sends many debug messages to" +
-  " the console. If you don't see the message 'start' below this, you're not" +
-  " seeing those helpful debug messages. In your browser console, click on" +
-  " menu 'Default Levels' and add Verbose");
 $(start);
+//TODO: make link in navbar to submit form
+//TODO: display story creation modal
+//TODO: allow logged in users to remove stories they wrote
+//TODO: use bootstrap to update styling

@@ -24,7 +24,7 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    const domain = url.split("/")[2]; //splits url based on /, takes the domain, which comes after the first 2 slashes 
+    const domain = this.url.split("/")[2]; //splits url based on /, takes the domain, which comes after the first 2 slashes 
     const hostnames = domain.split("."); //splits the domain into its parts, with subdomains on the left and the tld on the right
     const hostname = hostnames[hostnames.length - 2] // we want the domain that is one left of the tld
     return hostname;
@@ -50,10 +50,6 @@ class StoryList {
    */
 
   static async getStories() {
-    // Note presence of `static` keyword: this indicates that getStories is
-    //  **not** an instance method. Rather, it is a method that is called on the
-    //  class directly. Why doesn't it make sense for getStories to be an
-    //  instance method?
 
     // query the /stories endpoint (no auth required)
     const response = await axios({
@@ -75,25 +71,32 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory(  user, newStory ) {
+  async addStory(user, newStory) {
     //validation
     if(!newStory.title || !newStory.author || !newStory.url){
-      throw new Error("Invalid story passed to addStory");
+      return "Invalid story passed to addStory";
     }
     if(!(user instanceof User)){
-      throw new Error("Invalid user object passed to addStory")
+      return "Invalid user object passed to addStory";
     }
-
-    const res = await axios.post(`${BASE_URL}/stories`, 
-    {
-      token: user.loginToken,
-      story: {
-        author: newStory.author,
-        title: newStory.title,
-        url: newStory.url
+    try{
+      const res = await axios.post(`${BASE_URL}/stories`, 
+      {
+        token: user.loginToken,
+        story: {
+          author: newStory.author,
+          title: newStory.title,
+          url: newStory.url
+        }
+      })
+      return res.data
+    }
+    catch(e){
+      if(e.code === "ERR_BAD_REQUEST"){
+        window.alert("Bad request, please make sure the URL is formatted properly ex: `https://www.google.com`")
       }
-    })
-    return res.status
+    }
+    
   }
 }
 
@@ -136,24 +139,29 @@ class User {
    */
 
   static async signup(username, password, name) {
-    const response = await axios({
-      url: `${BASE_URL}/signup`,
-      method: "POST",
-      data: { user: { username, password, name } },
-    });
-
-    let { user } = response.data
-
-    return new User(
-      {
-        username: user.username,
-        name: user.name,
-        createdAt: user.createdAt,
-        favorites: user.favorites,
-        ownStories: user.stories
-      },
-      response.data.token
-    );
+    try {
+      const response = await axios({
+        url: `${BASE_URL}/signup`,
+        method: "POST",
+        data: { user: { username, password, name } },
+      });
+  
+      let { user } = response.data
+  
+      return new User(
+        {
+          username: user.username,
+          name: user.name,
+          createdAt: user.createdAt,
+          favorites: user.favorites,
+          ownStories: user.stories
+        },
+        response.data.token
+      );
+    } catch (e) {
+      window.alert(e)
+    }
+    
   }
 
   /** Login in user with API, make User instance & return it.
