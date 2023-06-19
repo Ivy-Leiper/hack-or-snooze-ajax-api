@@ -36,13 +36,12 @@ async function start() {
   await checkForRememberedUser();
   await getAndShowStoriesOnStart();
 
-  // if we got a logged-in user
+  // if there is a logged-in user
   if (currentUser) updateUIOnUserLogin();
 }
 
 // Once the DOM is entirely loaded, begin the app
 $(start);
-//TODO: make link in navbar to submit form
-//TODO: display story creation modal
-//TODO: allow logged in users to remove stories they wrote
+//TODO: allow logged in users to remove stories they wrote 
+//TODO: allow logged in users to 
 //TODO: use bootstrap to update styling

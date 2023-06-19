@@ -29,6 +29,7 @@ class Story {
     const hostname = hostnames[hostnames.length - 2] // we want the domain that is one left of the tld
     return hostname;
   }
+
 }
 
 
@@ -89,7 +90,10 @@ class StoryList {
           url: newStory.url
         }
       })
-      return res.data
+      if(res.status === 200){
+        user.ownStories.push(res.data.story.map(story => new Story(story)))
+      }
+      return res.data;
     }
     catch(e){
       if(e.code === "ERR_BAD_REQUEST"){
@@ -111,25 +115,19 @@ class User {
    *   - token
    */
 
-  constructor({
-                username,
-                name,
-                createdAt,
-                favorites = [],
-                ownStories = []
-              },
-              token) {
-    this.username = username;
-    this.name = name;
-    this.createdAt = createdAt;
+  constructor({username, name, createdAt, favorites = [], ownStories = []}, token) 
+    {
+      this.username = username;
+      this.name = name;
+      this.createdAt = createdAt;
 
-    // instantiate Story instances for the user's favorites and ownStories
-    this.favorites = favorites.map(s => new Story(s));
-    this.ownStories = ownStories.map(s => new Story(s));
+      // instantiate Story instances for the user's favorites and ownStories
+      this.favorites = favorites.map(s => new Story(s));
+      this.ownStories = ownStories.map(s => new Story(s));
 
-    // store the login token on the user so it's easy to find for API calls.
-    this.loginToken = token;
-  }
+      // store the login token on the user so it's easy to find for API calls.
+      this.loginToken = token;
+    }
 
   /** Register new user in API, make User instance & return it.
    *
@@ -218,6 +216,47 @@ class User {
     } catch (err) {
       console.error("loginViaStoredCredentials failed", err);
       return null;
+    }
+  }
+  async toggleFavorite(storyId){
+    //if story is already in favorites, unfavorite it
+    if(this.favorites.find(s => s.storyId === storyId)){
+      try {
+        const res = await axios.delete(`${BASE_URL}/users/${this.username}/favorites/${storyId}`, {data: {token: this.loginToken}});
+        if(res.status === 200){
+          location.reload()
+        }
+      } catch (error) {
+        console.error(error);      
+        window.alert("Error unfavoriting story")
+      }
+    }
+    //otherwise, favorite it
+    else{
+      try {
+        const res = await axios.post(`${BASE_URL}/users/${this.username}/favorites/${storyId}`, {token: this.loginToken});
+        if(res.status === 200){
+          const story = await axios.get(`${BASE_URL}/stories/${storyId}`);
+          if(story.status){
+            //trigger refresh
+            location.reload()
+          }
+        }
+      } catch (error) {
+        console.error(error);      
+        window.alert("Error favoriting story")
+      }
+    }
+  }
+  async deleteStory(storyId){
+    try {
+      const res = await axios.delete(`${BASE_URL}/stories/${storyId}`, {data: {token: this.loginToken}});
+      if(res.status === 200){
+        location.reload()
+      }
+    } catch (error) {
+      console.error(error);      
+      window.alert("Error deleting Story")
     }
   }
 }
