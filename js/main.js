@@ -42,6 +42,4 @@ async function start() {
 
 // Once the DOM is entirely loaded, begin the app
 $(start);
-//TODO: allow logged in users to remove stories they wrote 
-//TODO: allow logged in users to 
 //TODO: use bootstrap to update styling

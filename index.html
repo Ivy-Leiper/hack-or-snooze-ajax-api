@@ -32,31 +32,40 @@
 </head>
 
 <body>
-
-<!-- top navigation bar -->
-<nav>
-  <div class="navbar-brand">
-    <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
-    <a class="nav-link" href="#" id="submitStory" data-bs-toggle="modal" data-bs-target="#createStoryModal">Submit Story</a>
-
+  <div class="container ">
+    <div class="row align-items-start">
+      <div class="col">
+        <nav>
+          <div class="navbar-brand">
+            <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
+            <a class="nav-link" href="#" id="submitStory" data-bs-toggle="modal" data-bs-target="#createStoryModal">Submit Story</a>
+      
+          </div>
+          <div class="nav-right">
+            <a class="nav-link" href="#" id="nav-login">Login/Signup</a>
+            <a class="nav-link" href="#" id="nav-user-profile"></a>
+            <a class="hidden" id="nav-logout" href="#"><small>(Logout)</small></a>
+          </div>
+        </nav>
+      
+        <!-- area for stories (all stories, user stories, favorites) -->
+        <section class="stories-container container">
+      
+          <!-- loading message (removed by JS after stories loaded) -->
+          <div id="stories-loading-msg">Loading&hellip;</div>
+      
+          <!-- List of all stories -->
+          <ol id="all-stories-list" class="stories-list"></ol>
+      
+        </section>
+      </div>
+    </div>
   </div>
-  <div class="nav-right">
-    <a class="nav-link" href="#" id="nav-login">Login/Signup</a>
-    <a class="nav-link" href="#" id="nav-user-profile"></a>
-    <a class="hidden" id="nav-logout" href="#"><small>(Logout)</small></a>
-  </div>
-</nav>
+  <!-- top navigation bar -->
 
-<!-- area for stories (all stories, user stories, favorites) -->
-<section class="stories-container container">
 
-  <!-- loading message (removed by JS after stories loaded) -->
-  <div id="stories-loading-msg">Loading&hellip;</div>
 
-  <!-- List of all stories -->
-  <ol id="all-stories-list" class="stories-list"></ol>
 
-</section>
 
 <section >
   <div class="modal fade" id="createStoryModal">

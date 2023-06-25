@@ -35,4 +35,4 @@ function showCreateStory(){
   $("submitStoryModal").show()
 }
 
-$("submitStory").on("click", showCreateStory)
+$("submitStory").on("click", showCreateStory);
